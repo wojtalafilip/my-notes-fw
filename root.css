@@ -1,0 +1,59 @@
+:root {
+  /* --- FONTS --- */
+
+  --font-primary: "Outfit";
+  --font-secondary: sans-serif;
+
+  /* set base values */
+  --text-base-size: 1em;
+  --text-scale-ratio: 1.2;
+
+  /* type scale */
+  --text-xs: calc(1em / (var(--text-scale-ratio) * var(--text-scale-ratio)));
+  --text-sm: calc(1em / var(--text-scale-ratio));
+  --text-md: calc(1em * var(--text-scale-ratio));
+  --text-lg: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio));
+  --text-xl: calc(
+    1em * var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio)
+  );
+  --text-xxl: calc(
+    1em * var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio) * var(--text-scale-ratio)
+  );
+  --text-xxxl: calc(
+    1.5em * var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio)
+  );
+
+  /* --- SPACING --- */
+
+  --baseline: 20px;
+
+  /* spacing values */
+  --space-sm: calc(var(--baseline) / 2);
+  --space-md: var(--baseline);
+  --space-lg: calc(var(--baseline) * 2);
+  --space-xl: calc(var(--baseline) * 3);
+
+  /* --- COLORS --- */
+
+  --color-primary: #252525;
+  --color-secondary: #dee2e6;
+  --color-tertiary: #495057;
+  --color-background: #ffffff;
+  --color-btn: #000000;
+  --color-btn-remove: #eb3b5a;
+  --color-star-icon: #ffdd59;
+  --color-note-1: #82c0ff;
+  --color-note-shadow-1: #68a7e6;
+  --color-note-2: #6ddb9c;
+  --color-note-shadow-2: #43d17f;
+  --color-note-3: #aba5fe;
+  --color-note-shadow-3: #928ce5;
+  --color-note-4: #ff927f;
+  --color-note-shadow-4: #ff735a;
+  --color-note-5: #fea1c2;
+  --color-note-shadow-5: #fd86b1;
+}

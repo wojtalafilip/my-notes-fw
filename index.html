@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="root.css" />
+    <link rel="stylesheet" href="reusable.css" />
+    <title>My Notes</title>
+    <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  </head>
+  <body>
+    <main class="main">
+      <div class="navigation">
+        <button type="button" onclick="renderInputNote()" class="btn--new-note">
+          <i class="icon-nav ph-bold ph-plus"></i>
+        </button>
+        <div class="colors">
+          <button type="button" class="btn--colors color-1"></button>
+          <button type="button" class="btn--colors color-2"></button>
+          <button type="button" class="btn--colors color-3"></button>
+          <button type="button" class="btn--colors color-4"></button>
+          <button type="button" class="btn--colors color-5"></button>
+        </div>
+        <div class="remove">
+          <button
+            type="button"
+            onclick="displayRemoveAll()"
+            class="btn--display-remove-all"
+          >
+            <i class="icon-nav ph ph-trash"></i>
+          </button>
+          <button
+            type="button"
+            onclick="removeAll()"
+            class="btn--remove-all hidden"
+          >
+            <i class="icon-nav ph ph-trash"></i>
+          </button>
+          <button type="button" onclick="back()" class="btn--back hidden">
+            <i class="icon-nav ph-bold ph-arrow-u-down-left"></i>
+          </button>
+        </div>
+      </div>
+      <div class="notes">
+        <p class="notes--title">Notes</p>
+        <div class="notes--container"></div>
+      </div>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
