@@ -15,6 +15,7 @@ let notes = JSON.parse(localStorage.getItem(`notes`) || `[]`);
 
 const state = {
   input: false,
+  remove: false,
 };
 
 const stage = {
@@ -55,6 +56,7 @@ const important = function (index) {
 const reject = function () {
   document.querySelector(`.note--input`).remove();
   state.input = false;
+  renderNotes();
 };
 
 const edit = function (index) {
@@ -224,16 +226,24 @@ const renderInputNote = function () {
   notesContainer.insertBefore(inputNote, document.querySelector(`.note`));
 };
 
+window.addEventListener(`click`, function (event) {
+  console.log(event.target);
+  if (!state.remove && event.target) return;
+  displayRemoveAll();
+});
+
 const displayRemoveAll = function () {
+  state.remove = true;
+  console.log(state.remove);
   displayRemoveAllBtn.classList.toggle(`hidden`);
   removeAllBtn.classList.toggle(`hidden`);
-  removeAllBtn.classList.toggle(`visualhidden`);
   backBtn.classList.toggle(`hidden`);
-  backBtn.classList.toggle(`visualhidden`);
 };
 
 const back = function () {
   displayRemoveAll();
+  state.remove = false;
+  console.log(state.remove);
 };
 
 const removeAll = function () {
