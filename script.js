@@ -266,6 +266,10 @@ colorsContainer.addEventListener(`click`, function (event) {
   stage.color = color.slice(-1);
 });
 
+newNoteBtn.addEventListener(`click`, function () {
+  console.log(`test`);
+});
+
 window.addEventListener(`load`, function () {
   renderNotes();
 });
