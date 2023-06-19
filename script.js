@@ -1,4 +1,7 @@
-"use strict";
+import { inputStructure } from "./structures";
+
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 const date = `${new Date().getDate()}/${String(
   new Date().getMonth() + 1
@@ -31,53 +34,6 @@ const accept = function (index) {
   if (!stage.data) return;
   renderNotes();
   state.input = false;
-};
-
-const important = function (index) {
-  let starIcon = document.querySelector(`.ph-star`);
-
-  if (index === undefined) {
-    stage.important ? (stage.important = false) : (stage.important = true);
-    stage.important === true
-      ? starIcon.classList.replace(`ph`, `ph-fill`)
-      : starIcon.classList.replace(`ph-fill`, `ph`);
-  }
-
-  if (index != undefined) {
-    const active = document.querySelector(`#imp-${index}`);
-    stage.important ? (stage.important = false) : (stage.important = true);
-    stage.important === true
-      ? active.classList.replace(`ph`, `ph-fill`)
-      : active.classList.replace(`ph-fill`, `ph`);
-    edit(index);
-  }
-};
-
-const reject = function () {
-  document.querySelector(`.note--input`).remove();
-  state.input = false;
-  renderNotes();
-};
-
-const edit = function (index) {
-  if (state.input) return;
-  const active = notes.find((el) => el.id === index);
-  stage.id = active.id;
-  stage.data = active.data;
-  stage.color = active.color;
-  stage.important = active.important;
-  stage.time = active.time;
-  state.input = true;
-  renderNotes(index);
-};
-
-const remove = function (index) {
-  if (state.input) return;
-  const active = notes.find((el) => el.id === index);
-  let removed = notes.filter((el) => el != active);
-  notes = removed;
-  localStorage.setItem(`notes`, JSON.stringify(notes));
-  renderNotes();
 };
 
 const addData = function (index) {
@@ -114,6 +70,53 @@ const addData = function (index) {
   document.querySelector(`.note--input`).remove();
 };
 
+const important = function (index) {
+  let starIcon = document.querySelector(`.ph-star`);
+
+  if (index === undefined) {
+    stage.important ? (stage.important = false) : (stage.important = true);
+    stage.important === true
+      ? starIcon.classList.replace(`ph`, `ph-fill`)
+      : starIcon.classList.replace(`ph-fill`, `ph`);
+  }
+
+  if (index != undefined) {
+    const active = document.querySelector(`#imp-${index}`);
+    stage.important ? (stage.important = false) : (stage.important = true);
+    stage.important === true
+      ? active.classList.replace(`ph`, `ph-fill`)
+      : active.classList.replace(`ph-fill`, `ph`);
+    edit(index);
+  }
+};
+
+const reject = function () {
+  // document.querySelector(`.note--input`).remove();
+  state.input = false;
+  renderNotes();
+};
+
+const edit = function (index) {
+  if (state.input) return;
+  const active = notes.find((el) => el.id === index);
+  stage.id = active.id;
+  stage.data = active.data;
+  stage.color = active.color;
+  stage.important = active.important;
+  stage.time = active.time;
+  state.input = true;
+  renderNotes(index);
+};
+
+const remove = function (index) {
+  if (state.input) return;
+  const active = notes.find((el) => el.id === index);
+  let removed = notes.filter((el) => el != active);
+  notes = removed;
+  localStorage.setItem(`notes`, JSON.stringify(notes));
+  renderNotes();
+};
+
 const renderNotes = function (index = ``) {
   document.querySelectorAll(`.note`).forEach((el) => el.remove());
   notes.forEach((el) => {
@@ -141,7 +144,6 @@ const renderNotes = function (index = ``) {
                 </button>
                 <button
                   type="button"
-                  
                   class="btn btn--edit"
                 >
                   <i class="icon ph ph-pencil-simple"></i>
@@ -150,55 +152,36 @@ const renderNotes = function (index = ``) {
             </div>
           </div>`;
 
-    const inputNote = `
-    <div class="note note--input note--color-${stage.color}">
-      <form>
-        <textarea
-        class="input color-${stage.color}"
-      rows="8"
-      cols="30"
-      maxlength="200"
-      spellcheck="false"
-      placeholder="What's on your mind?"
-      autofocus
-    >
-${noteData}</textarea
-    >
-  </form>
-  <div class="note__footer">
-    <div class="note__input-footer--buttons">
-      <button type="button" onclick="reject()" class="btn btn--reject">
-        <i class="icon ph-bold ph-x"></i>
-      </button>
-      <div class="buttons__container">
-  <button id="${noteID}" type="button" onclick="important(${noteID})" class="btn btn--important">
-    <i id="imp-${noteID}" class="icon ph${
-      noteImportant ? `-fill` : ``
-    } ph-star" ></i>
-  </button>
-  <button type="button" onclick="accept(${noteID})" class="btn btn--accept">
-    <i class="icon ph ph-check"></i>
-  </button>
-</div>
-    </div>
-  </div>
-</div>`;
+    const inputNote = inputStructure;
 
     notesContainer.insertAdjacentHTML(
       `afterbegin`,
       index === noteID ? inputNote : note
     );
 
-    const removeBtn = document.querySelector(`.btn--remove`);
-    const editBtn = document.querySelector(`.btn--edit`);
-    removeBtn.addEventListener(`click`, function () {
-      console.log(`remove`);
-      remove(noteID);
-    });
-    editBtn.addEventListener(`click`, function () {
-      console.log(`edit`);
-      edit(noteID);
-    });
+    if (index === noteID) {
+      const rejectBtn = document.querySelector(`.btn--reject`);
+      const importantBtn = document.querySelector(`.btn--important`);
+      const acceptBtn = document.querySelector(`.btn--accept`);
+      rejectBtn.addEventListener(`click`, function () {
+        reject();
+      });
+      importantBtn.addEventListener(`click`, function () {
+        important(noteID);
+      });
+      acceptBtn.addEventListener(`click`, function () {
+        accept(noteID);
+      });
+    } else {
+      const removeBtn = document.querySelector(`.btn--remove`);
+      const editBtn = document.querySelector(`.btn--edit`);
+      removeBtn.addEventListener(`click`, function () {
+        remove(noteID);
+      });
+      editBtn.addEventListener(`click`, function () {
+        edit(noteID);
+      });
+    }
   });
 };
 
@@ -296,6 +279,7 @@ window.addEventListener(`load`, function () {
 });
 
 newNoteBtn.addEventListener(`click`, function () {
+  console.log(exportTest);
   renderInputNote();
 });
 
