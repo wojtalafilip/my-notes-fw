@@ -209,14 +209,14 @@ const renderInputNote = function () {
             </form>
             <div class="note__footer">
               <div class="note__input-footer--buttons">
-                <button type="button" onclick="reject()" class="btn btn--reject">
+                <button type="button" class="btn btn--reject">
         <i class="icon ph-bold ph-x"></i>
       </button>
       <div class="buttons__container">
-  <button type="button" onclick="important()" class="btn btn--important">
+  <button type="button" class="btn btn--important">
     <i id="test" class="icon ph ph-star"></i>
   </button>
-  <button type="button" onclick="accept()" class="btn btn--accept">
+  <button type="button" class="btn btn--accept">
     <i class="icon ph-bold ph-check"></i>
   </button>
 </div>
@@ -224,26 +224,32 @@ const renderInputNote = function () {
             </div>`;
 
   notesContainer.insertBefore(inputNote, document.querySelector(`.note`));
+
+  const rejectBtn = document.querySelector(`.btn--reject`);
+  const importantBtn = document.querySelector(`.btn--important`);
+  const acceptBtn = document.querySelector(`.btn--accept`);
+  rejectBtn.addEventListener(`click`, function () {
+    reject();
+  });
+  importantBtn.addEventListener(`click`, function () {
+    important();
+  });
+  acceptBtn.addEventListener(`click`, function () {
+    accept();
+  });
 };
 
-window.addEventListener(`click`, function (event) {
-  console.log(event.target);
-  if (!state.remove && event.target) return;
-  displayRemoveAll();
-});
+// window.addEventListener(`click`, function (event) {
+//   console.log(event.target);
+//   if (!state.remove && event.target) return;
+//   displayRemoveAll();
+// });
 
 const displayRemoveAll = function () {
   state.remove = true;
-  console.log(state.remove);
   displayRemoveAllBtn.classList.toggle(`hidden`);
   removeAllBtn.classList.toggle(`hidden`);
   backBtn.classList.toggle(`hidden`);
-};
-
-const back = function () {
-  displayRemoveAll();
-  state.remove = false;
-  console.log(state.remove);
 };
 
 const removeAll = function () {
@@ -252,6 +258,11 @@ const removeAll = function () {
   renderNotes();
   state.input = false;
   displayRemoveAll();
+};
+
+const back = function () {
+  displayRemoveAll();
+  state.remove = false;
 };
 
 colorsContainer.addEventListener(`click`, function (event) {
@@ -266,10 +277,22 @@ colorsContainer.addEventListener(`click`, function (event) {
   stage.color = color.slice(-1);
 });
 
-newNoteBtn.addEventListener(`click`, function () {
-  console.log(`test`);
-});
-
 window.addEventListener(`load`, function () {
   renderNotes();
+});
+
+newNoteBtn.addEventListener(`click`, function () {
+  renderInputNote();
+});
+
+displayRemoveAllBtn.addEventListener(`click`, function () {
+  displayRemoveAll();
+});
+
+removeAllBtn.addEventListener(`click`, function () {
+  removeAll();
+});
+
+backBtn.addEventListener(`click`, function () {
+  back();
 });
