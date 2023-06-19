@@ -117,26 +117,31 @@ const addData = function (index) {
 const renderNotes = function (index = ``) {
   document.querySelectorAll(`.note`).forEach((el) => el.remove());
   notes.forEach((el) => {
-    const note = `<div id="${el.id}" class="note note--color-${el.color}">
-            <div class="note__data">${el.data}</div>
+    const noteID = el.id;
+    const noteData = el.data;
+    const noteColor = el.color;
+    const noteTime = el.time;
+    const noteImportant = el.important;
+
+    const note = `<div id="${noteID}" class="note note--color-${noteColor}">
+            <div class="note__data">${noteData}</div>
             <div class="note__footer">
-              <div class="note__footer--date">${el.time}</div>
+              <div class="note__footer--date">${noteTime}</div>
               <div class="note__footer--buttons">
                 <button type="button" class="note__marker ${
-                  el.important ? `` : `hidden`
+                  noteImportant ? `` : `hidden`
                 }">
   <i class="icon ph-fill ph-star"></i>
 </button>
                 <button
                   type="button"
-                  onclick="remove(${el.id})"
                   class="btn btn--remove"
                 >
                   <i class="icon ph ph-trash"></i>
                 </button>
                 <button
                   type="button"
-                  onclick="edit(${el.id})"
+                  
                   class="btn btn--edit"
                 >
                   <i class="icon ph ph-pencil-simple"></i>
@@ -157,7 +162,7 @@ const renderNotes = function (index = ``) {
       placeholder="What's on your mind?"
       autofocus
     >
-${el.data}</textarea
+${noteData}</textarea
     >
   </form>
   <div class="note__footer">
@@ -166,14 +171,12 @@ ${el.data}</textarea
         <i class="icon ph-bold ph-x"></i>
       </button>
       <div class="buttons__container">
-  <button id="${el.id}" type="button" onclick="important(${
-      el.id
-    })" class="btn btn--important">
-    <i id="imp-${el.id}" class="icon ph${
-      el.important ? `-fill` : ``
+  <button id="${noteID}" type="button" onclick="important(${noteID})" class="btn btn--important">
+    <i id="imp-${noteID}" class="icon ph${
+      noteImportant ? `-fill` : ``
     } ph-star" ></i>
   </button>
-  <button type="button" onclick="accept(${el.id})" class="btn btn--accept">
+  <button type="button" onclick="accept(${noteID})" class="btn btn--accept">
     <i class="icon ph ph-check"></i>
   </button>
 </div>
@@ -183,8 +186,19 @@ ${el.data}</textarea
 
     notesContainer.insertAdjacentHTML(
       `afterbegin`,
-      index === el.id ? inputNote : note
+      index === noteID ? inputNote : note
     );
+
+    const removeBtn = document.querySelector(`.btn--remove`);
+    const editBtn = document.querySelector(`.btn--edit`);
+    removeBtn.addEventListener(`click`, function () {
+      console.log(`remove`);
+      remove(noteID);
+    });
+    editBtn.addEventListener(`click`, function () {
+      console.log(`edit`);
+      edit(noteID);
+    });
   });
 };
 
