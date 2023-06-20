@@ -1,18 +1,17 @@
-import { inputStructure } from "./structures";
-
-import "core-js/stable";
-import "regenerator-runtime/runtime";
+/* ----- VARIABLES --- */
 
 const date = `${new Date().getDate()}/${String(
   new Date().getMonth() + 1
 ).padStart(2, "0")}/${new Date().getFullYear()}`;
 
-const notesContainer = document.querySelector(`.notes--container`);
-const colorsContainer = document.querySelector(`.colors`);
+const notesContainer = document.querySelector(`.notes__container`);
+const colorsContainer = document.querySelector(`.navigation__colors`);
 const newNoteBtn = document.querySelector(`.btn--new-note`);
 const displayRemoveAllBtn = document.querySelector(`.btn--display-remove-all`);
 const removeAllBtn = document.querySelector(`.btn--remove-all`);
 const backBtn = document.querySelector(`.btn--back`);
+
+/* ----- APP STATE ----- */
 
 let notes = JSON.parse(localStorage.getItem(`notes`) || `[]`);
 
@@ -27,6 +26,33 @@ const stage = {
   color: ``,
   important: false,
   time: ``,
+};
+
+/* ----- INPUT NOTE ----- */
+
+const reject = function () {
+  state.input = false;
+  renderNotes();
+};
+
+const important = function (index) {
+  let starIcon = document.querySelector(`.ph-star`);
+
+  if (index === undefined) {
+    stage.important ? (stage.important = false) : (stage.important = true);
+    stage.important === true
+      ? starIcon.classList.replace(`ph`, `ph-fill`)
+      : starIcon.classList.replace(`ph-fill`, `ph`);
+  }
+
+  if (index != undefined) {
+    const active = document.querySelector(`#imp-${index}`);
+    stage.important ? (stage.important = false) : (stage.important = true);
+    stage.important === true
+      ? active.classList.replace(`ph`, `ph-fill`)
+      : active.classList.replace(`ph-fill`, `ph`);
+    edit(index);
+  }
 };
 
 const accept = function (index) {
@@ -70,29 +96,14 @@ const addData = function (index) {
   document.querySelector(`.note--input`).remove();
 };
 
-const important = function (index) {
-  let starIcon = document.querySelector(`.ph-star`);
+/* ----- NOTE ----- */
 
-  if (index === undefined) {
-    stage.important ? (stage.important = false) : (stage.important = true);
-    stage.important === true
-      ? starIcon.classList.replace(`ph`, `ph-fill`)
-      : starIcon.classList.replace(`ph-fill`, `ph`);
-  }
-
-  if (index != undefined) {
-    const active = document.querySelector(`#imp-${index}`);
-    stage.important ? (stage.important = false) : (stage.important = true);
-    stage.important === true
-      ? active.classList.replace(`ph`, `ph-fill`)
-      : active.classList.replace(`ph-fill`, `ph`);
-    edit(index);
-  }
-};
-
-const reject = function () {
-  // document.querySelector(`.note--input`).remove();
-  state.input = false;
+const remove = function (index) {
+  if (state.input) return;
+  const active = notes.find((el) => el.id === index);
+  let remaining = notes.filter((el) => el != active);
+  notes = remaining;
+  localStorage.setItem(`notes`, JSON.stringify(notes));
   renderNotes();
 };
 
@@ -108,13 +119,59 @@ const edit = function (index) {
   renderNotes(index);
 };
 
-const remove = function (index) {
+/* ----- NOTES FUNCTIONS ----- */
+
+const renderInputNote = function () {
   if (state.input) return;
-  const active = notes.find((el) => el.id === index);
-  let removed = notes.filter((el) => el != active);
-  notes = removed;
-  localStorage.setItem(`notes`, JSON.stringify(notes));
-  renderNotes();
+  state.input = true;
+  stage.color = Math.floor(Math.random() * 5) + 1;
+  stage.important = false;
+
+  const inputNote = `
+<div class="note note--input note--color-${stage.color}">
+  <form>
+    <textarea
+      class="input color-${stage.color}"
+      rows="8"
+      cols="30"
+      maxlength="200"
+      spellcheck="false"
+      autofocus
+      placeholder="What's on your mind?"
+    ></textarea>
+    </form>
+    <div class="note__footer">
+      <div class="note__input-footer--buttons">
+        <button type="button" class="btn btn--reject">
+         <i class="icon ph-bold ph-x"></i>
+        </button>
+      <div class="buttons__container">
+        <button type="button" class="btn btn--important">
+          <i id="test" class="icon ph ph-star"></i>
+        </button>
+        <button type="button" class="btn btn--accept">
+          <i class="icon ph-bold ph-check"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  `;
+
+  notesContainer.insertAdjacentHTML(`afterbegin`, inputNote);
+
+  const rejectBtn = document.querySelector(`.btn--reject`);
+  const importantBtn = document.querySelector(`.btn--important`);
+  const acceptBtn = document.querySelector(`.btn--accept`);
+  rejectBtn.addEventListener(`click`, function () {
+    reject();
+  });
+  importantBtn.addEventListener(`click`, function () {
+    important();
+  });
+  acceptBtn.addEventListener(`click`, function () {
+    accept();
+  });
 };
 
 const renderNotes = function (index = ``) {
@@ -126,33 +183,64 @@ const renderNotes = function (index = ``) {
     const noteTime = el.time;
     const noteImportant = el.important;
 
-    const note = `<div id="${noteID}" class="note note--color-${noteColor}">
-            <div class="note__data">${noteData}</div>
-            <div class="note__footer">
-              <div class="note__footer--date">${noteTime}</div>
-              <div class="note__footer--buttons">
-                <button type="button" class="note__marker ${
-                  noteImportant ? `` : `hidden`
-                }">
-  <i class="icon ph-fill ph-star"></i>
-</button>
-                <button
-                  type="button"
-                  class="btn btn--remove"
-                >
-                  <i class="icon ph ph-trash"></i>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn--edit"
-                >
-                  <i class="icon ph ph-pencil-simple"></i>
-                </button>
-              </div>
-            </div>
-          </div>`;
+    const note = `
+<div id="${noteID}" class="note note--color-${noteColor}">
+  <div class="note__data">${noteData}</div>
+  <div class="note__footer">
+    <div class="note__footer--date">${noteTime}</div>
+    <div class="note__footer--buttons">
+      <button type="button" class="note__marker ${
+        noteImportant ? `` : `hidden`
+      }">
+        <i i class="icon ph-fill ph-star"></i>
+      </button>
+      <button
+        type="button"
+        class="btn btn--remove"
+      >
+        <i class="icon ph ph-trash"></i>
+      </button>
+      <button
+        type="button"
+        class="btn btn--edit"
+        >
+          <i class="icon ph ph-pencil-simple"></i>
+      </button>
+    </div>
+  </div>
+</div>`;
 
-    const inputNote = inputStructure;
+    const inputNote = `
+<div class="note note--input note--color-${stage.color}">
+  <form>
+    <textarea
+      class="input color-${stage.color}"
+      rows="8"
+      cols="30"
+      maxlength="200"
+      spellcheck="false"
+      placeholder="What's on your mind?"
+      autofocus>${noteData}</textarea>
+  </form>
+  <div class="note__footer">
+    <div class="note__input-footer--buttons">
+      <button type="button" class="btn btn--reject">
+        <i class="icon ph-bold ph-x"></i>
+      </button>
+      <div class="buttons__container">
+        <button id="${noteID}" type="button" class="btn btn--important">
+          <i
+            id="imp-${noteID}"
+            class="icon ph${noteImportant ? `-fill` : ``} ph-star"
+          ></i>
+        </button>
+        <button type="button" class="btn btn--accept">
+          <i class="icon ph ph-check"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>`;
 
     notesContainer.insertAdjacentHTML(
       `afterbegin`,
@@ -185,62 +273,7 @@ const renderNotes = function (index = ``) {
   });
 };
 
-const renderInputNote = function () {
-  if (state.input) return;
-  state.input = true;
-  stage.color = Math.floor(Math.random() * 5) + 1;
-  stage.important = false;
-
-  const inputNote = document.createElement(`div`);
-  inputNote.classList.add(`note`, `note--input`, `note--color-${stage.color}`);
-  inputNote.innerHTML = `<form>
-              <textarea
-                class="input color-${stage.color}"
-                rows="8"
-                cols="30"
-                maxlength="200"
-                spellcheck="false"
-                autofocus
-                placeholder="What's on your mind?"
-              ></textarea>
-            </form>
-            <div class="note__footer">
-              <div class="note__input-footer--buttons">
-                <button type="button" class="btn btn--reject">
-        <i class="icon ph-bold ph-x"></i>
-      </button>
-      <div class="buttons__container">
-  <button type="button" class="btn btn--important">
-    <i id="test" class="icon ph ph-star"></i>
-  </button>
-  <button type="button" class="btn btn--accept">
-    <i class="icon ph-bold ph-check"></i>
-  </button>
-</div>
-              </div>
-            </div>`;
-
-  notesContainer.insertBefore(inputNote, document.querySelector(`.note`));
-
-  const rejectBtn = document.querySelector(`.btn--reject`);
-  const importantBtn = document.querySelector(`.btn--important`);
-  const acceptBtn = document.querySelector(`.btn--accept`);
-  rejectBtn.addEventListener(`click`, function () {
-    reject();
-  });
-  importantBtn.addEventListener(`click`, function () {
-    important();
-  });
-  acceptBtn.addEventListener(`click`, function () {
-    accept();
-  });
-};
-
-// window.addEventListener(`click`, function (event) {
-//   console.log(event.target);
-//   if (!state.remove && event.target) return;
-//   displayRemoveAll();
-// });
+/* ----- NAVIGATION FUNCTIONS ----- */
 
 const displayRemoveAll = function () {
   state.remove = true;
@@ -262,6 +295,12 @@ const back = function () {
   state.remove = false;
 };
 
+/* ----- EVENT LISTENERS ----- */
+
+window.addEventListener(`load`, function () {
+  renderNotes();
+});
+
 colorsContainer.addEventListener(`click`, function (event) {
   let target = event.target.closest(`button`);
   if (event.target != target) return;
@@ -274,12 +313,7 @@ colorsContainer.addEventListener(`click`, function (event) {
   stage.color = color.slice(-1);
 });
 
-window.addEventListener(`load`, function () {
-  renderNotes();
-});
-
 newNoteBtn.addEventListener(`click`, function () {
-  console.log(exportTest);
   renderInputNote();
 });
 

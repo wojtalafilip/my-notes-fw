@@ -1,14 +1,12 @@
 :root {
-  /* --- FONTS --- */
+  /* ----- FONTS ----- */
 
   --font-primary: "Outfit";
   --font-secondary: sans-serif;
 
-  /* set base values */
   --text-base-size: 1em;
   --text-scale-ratio: 1.2;
 
-  /* type scale */
   --text-xs: calc(1em / (var(--text-scale-ratio) * var(--text-scale-ratio)));
   --text-sm: calc(1em / var(--text-scale-ratio));
   --text-md: calc(1em * var(--text-scale-ratio));
@@ -27,21 +25,19 @@
       var(--text-scale-ratio)
   );
 
-  /* --- SPACING --- */
+  /* ----- SPACING ----- */
 
   --baseline: 20px;
 
-  /* spacing values */
   --space-sm: calc(var(--baseline) / 2);
   --space-md: var(--baseline);
   --space-lg: calc(var(--baseline) * 2);
   --space-xl: calc(var(--baseline) * 3);
 
-  /* --- COLORS --- */
+  /* ----- COLORS ----- */
 
   --color-primary: #252525;
   --color-secondary: #dee2e6;
-  --color-tertiary: #495057;
   --color-background: #ffffff;
   --color-btn: #000000;
   --color-btn-remove: #eb3b5a;
@@ -53,7 +49,7 @@
   --color-note-3: #aba5fe;
   --color-note-shadow-3: #928ce5;
   --color-note-4: #ff927f;
-  --color-note-shadow-4: #cc7566;
+  --color-note-shadow-4: #e68372;
   --color-note-5: #fea1c2;
   --color-note-shadow-5: #fd86b1;
 }

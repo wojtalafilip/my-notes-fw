@@ -16,6 +16,7 @@ body {
 
 .main {
   display: flex;
+  overflow-x: hidden;
 }
 
 /* --- NAVIGATION --- */
@@ -33,11 +34,11 @@ body {
 }
 
 .btn--new-note {
-  display: inline-block;
+  display: block;
   border: none;
   border-radius: 100px;
-  height: 3.5em;
-  width: 3.5em;
+  height: 4em;
+  width: 4em;
   padding-top: 2px;
   margin-bottom: calc(var(--space-md) + var(--space-sm));
   background-color: var(--color-btn);
@@ -49,7 +50,7 @@ body {
   font-size: var(--text-xl);
 }
 
-.colors {
+.navigation__colors {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -74,47 +75,36 @@ body {
   width: 2.4em;
 }
 
-.remove {
+.navigation__remove {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
   margin-top: auto;
 }
 
-.btn--display-remove-all {
+.btn--remove-container {
   display: inline-block;
   border: none;
   border-radius: 100px;
   height: 4em;
   width: 4em;
   padding-top: 2px;
-  background-color: var(--color-btn-remove);
   cursor: pointer;
+}
+
+.btn--display-remove-all {
+  background-color: var(--color-btn-remove);
   color: var(--color-background);
 }
 
 .btn--remove-all {
-  display: inline-block;
-  border: none;
-  border-radius: 100px;
-  height: 4em;
-  width: 4em;
-  padding-top: 2px;
   background-color: var(--color-btn-remove);
-  cursor: pointer;
   color: var(--color-background);
 }
 
 .btn--back {
-  display: inline-block;
-  border: none;
-  border-radius: 100px;
-  height: 4em;
-  width: 4em;
-  padding-top: 2px;
   background-color: var(--color-btn);
   color: var(--color-background);
-  cursor: pointer;
 }
 
 /* --- NOTES --- */
@@ -131,7 +121,7 @@ body {
   font-weight: 600;
 }
 
-.notes--container {
+.notes__container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1.5em;
@@ -156,6 +146,7 @@ body {
 .note__data {
   white-space: pre-line;
   overflow: hidden;
+  word-wrap: break-word;
 }
 
 .note__marker {
