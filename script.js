@@ -30,17 +30,17 @@ const stage = {
 
 /* ----- INPUT NOTE ----- */
 
-const reject = function () {
+function reject() {
   state.input = false;
   renderNotes();
-};
+}
 
-const important = function (index) {
+function important(index) {
   let starIcon = document.querySelector(`.ph-star`);
 
   if (index === undefined) {
     stage.important ? (stage.important = false) : (stage.important = true);
-    stage.important === true
+    stage.important
       ? starIcon.classList.replace(`ph`, `ph-fill`)
       : starIcon.classList.replace(`ph-fill`, `ph`);
   }
@@ -48,21 +48,21 @@ const important = function (index) {
   if (index != undefined) {
     const active = document.querySelector(`#imp-${index}`);
     stage.important ? (stage.important = false) : (stage.important = true);
-    stage.important === true
+    stage.important
       ? active.classList.replace(`ph`, `ph-fill`)
       : active.classList.replace(`ph-fill`, `ph`);
     edit(index);
   }
-};
+}
 
-const accept = function (index) {
+function accept(index) {
   addData(index);
   if (!stage.data) return;
   renderNotes();
   state.input = false;
-};
+}
 
-const addData = function (index) {
+function addData(index) {
   stage.id = Date.now();
   stage.data = document.querySelector(`.input`).value;
   stage.time = date;
@@ -94,20 +94,20 @@ const addData = function (index) {
 
   localStorage.setItem(`notes`, JSON.stringify(notes));
   document.querySelector(`.note--input`).remove();
-};
+}
 
 /* ----- NOTE ----- */
 
-const remove = function (index) {
+function remove(index) {
   if (state.input) return;
   const active = notes.find((el) => el.id === index);
   let remaining = notes.filter((el) => el != active);
   notes = remaining;
   localStorage.setItem(`notes`, JSON.stringify(notes));
   renderNotes();
-};
+}
 
-const edit = function (index) {
+function edit(index) {
   if (state.input) return;
   const active = notes.find((el) => el.id === index);
   stage.id = active.id;
@@ -117,11 +117,11 @@ const edit = function (index) {
   stage.time = active.time;
   state.input = true;
   renderNotes(index);
-};
+}
 
 /* ----- NOTES FUNCTIONS ----- */
 
-const renderInputNote = function () {
+function renderInputNote() {
   if (state.input) return;
   state.input = true;
   stage.color = Math.floor(Math.random() * 5) + 1;
@@ -172,9 +172,9 @@ const renderInputNote = function () {
   acceptBtn.addEventListener(`click`, function () {
     accept();
   });
-};
+}
 
-const renderNotes = function (index = ``) {
+function renderNotes(index = ``) {
   document.querySelectorAll(`.note`).forEach((el) => el.remove());
   notes.forEach((el) => {
     const noteID = el.id;
@@ -271,35 +271,33 @@ const renderNotes = function (index = ``) {
       });
     }
   });
-};
+}
 
 /* ----- NAVIGATION FUNCTIONS ----- */
 
-const displayRemoveAll = function () {
+function displayRemoveAll() {
   state.remove = true;
   displayRemoveAllBtn.classList.toggle(`hidden`);
   removeAllBtn.classList.toggle(`hidden`);
   backBtn.classList.toggle(`hidden`);
-};
+}
 
-const removeAll = function () {
+function removeAll() {
   notes = [];
   localStorage.setItem(`notes`, JSON.stringify(notes));
   renderNotes();
   state.input = false;
   displayRemoveAll();
-};
+}
 
-const back = function () {
+function back() {
   displayRemoveAll();
   state.remove = false;
-};
+}
 
 /* ----- EVENT LISTENERS ----- */
 
-window.addEventListener(`load`, function () {
-  renderNotes();
-});
+window.addEventListener(`load`, renderNotes);
 
 colorsContainer.addEventListener(`click`, function (event) {
   let target = event.target.closest(`button`);
@@ -313,18 +311,10 @@ colorsContainer.addEventListener(`click`, function (event) {
   stage.color = color.slice(-1);
 });
 
-newNoteBtn.addEventListener(`click`, function () {
-  renderInputNote();
-});
+newNoteBtn.addEventListener(`click`, renderInputNote);
 
-displayRemoveAllBtn.addEventListener(`click`, function () {
-  displayRemoveAll();
-});
+displayRemoveAllBtn.addEventListener(`click`, displayRemoveAll);
 
-removeAllBtn.addEventListener(`click`, function () {
-  removeAll();
-});
+removeAllBtn.addEventListener(`click`, removeAll);
 
-backBtn.addEventListener(`click`, function () {
-  back();
-});
+backBtn.addEventListener(`click`, back);
